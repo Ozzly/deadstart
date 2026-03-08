@@ -75,31 +75,6 @@
       //   document.getElementById("search").focus();
       // });
 
-      // Handle typing and search on Enter key
-      document.getElementById("search").addEventListener("keydown", (e) => {
-        const query = e.target.value.trim();
-
-        // Prevent input of leading spaces
-        if (e.key === " " && query === "") {
-          e.preventDefault();
-        }
-
-        // Handle submission
-        if (e.key === "Enter") {
-          const split = query.match(regex);
-          if (split) {
-            const { commandChar, command, space, body } = split.groups;
-            if (commands[command]) {
-              window.location.href = `${commands[command]}${encodeURIComponent(body)}`;
-            } else {
-              console.log("invalid command");
-            }
-          } else {
-            window.location.href = `https://www.duckduckgo.com/?q=${query}`;
-          }
-        }
-      });
-
       const search = document.getElementById("search");
       const overlayCommandKey = document.getElementById("overlayCommandKey");
       const overlayCommand = document.getElementById("overlayCommand");
@@ -142,7 +117,27 @@
         overlaySuggestion.textContent = suffix;
       }
 
+      function handleEnter(e) {
+        const query = e.target.value.trim();
+        const split = query.match(regex);
+        if (split) {
+          const { commandChar, command, space, body } = split.groups;
+          if (commands[command]) {
+            window.location.href = `${commands[command]}${encodeURIComponent(body)}`;
+          } else {
+            console.log("invalid command");
+          }
+        } else {
+          window.location.href = `https://www.duckduckgo.com/?q=${query}`;
+        }
+      }
+
       search.addEventListener("input", updateSuggestion);
+      search.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") return handleEnter(e);
+        if ((e.key === " ") & (e.target.value === ""))
+          return e.preventDefault();
+      });
 
       document.addEventListener("keydown", (e) => {
         search.focus();
