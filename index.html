@@ -39,7 +39,6 @@
         ><span id="overlayBody" class="text-text"></span>
       </div>
     </div>
-    <!-- ...existing code... -->
     <script>
       const commandPrefixes = ["/", ":", ">"];
       const regex =
@@ -70,11 +69,6 @@
         document.getElementById("search").value = "";
       });
 
-      // Focus search on click anywhere
-      // document.addEventListener("click", () => {
-      //   document.getElementById("search").focus();
-      // });
-
       const search = document.getElementById("search");
       const overlayCommandKey = document.getElementById("overlayCommandKey");
       const overlayCommand = document.getElementById("overlayCommand");
@@ -86,15 +80,14 @@
 
       function updateSuggestion() {
         const raw = search.value;
-
         const split = raw.match(regex);
         if (!split) {
+          // Clear overlay if no command used
           overlayBody.textContent = raw;
           overlayCommandKey.textContent = "";
           overlayCommand.textContent = "";
           overlaySpace.textContent = "";
           overlaySuggestion.textContent = "";
-
           return;
         }
 
@@ -104,16 +97,18 @@
         overlayCommand.textContent = command;
         overlaySpace.textContent = space;
         overlayBody.textContent = body;
+
+        // Command suggestion / ghost complete
         const match = commandKeys.find((c) => c.startsWith(command));
-        const exactMatch = commandKeys.find((c) => c === command);
-
-        overlayCommand.className = `whitespace-pre ${exactMatch ? "text-success" : "text-fail"} `;
-
         const suffix =
           space || body || !match || command === ""
             ? ""
             : match.slice(command.length);
         overlaySuggestion.textContent = suffix;
+
+        // Color overlay command based on if it matches an existing command
+        const exactMatch = commandKeys.find((c) => c === command);
+        overlayCommand.className = `whitespace-pre ${exactMatch ? "text-success" : "text-fail"} `;
       }
 
       function handleEnter() {
