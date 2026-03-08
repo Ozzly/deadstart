@@ -132,11 +132,33 @@
         }
       }
 
+      // Autocomplete command suggestions
+      function handleTab(e) {
+        e.preventDefault();
+
+        const raw = search.value;
+        const split = raw.match(regex);
+        if (!split) return;
+        const { commandChar, command, space, body } = split.groups;
+
+        // Check there is a command to autocomplete to
+        const match = commandKeys.find((c) => c.startsWith(command));
+        if (!commandChar || command.length === 0 || !match) return;
+
+        // Update the color of the overlay command, which will always be correct
+        overlayCommand.className = "whitespace-pre text-success";
+        // Set values of overlay fields
+        overlayCommand.textContent = match;
+        overlaySuggestion.textContent = "";
+        search.value = `${commandChar}${match}`;
+      }
+
       search.addEventListener("input", updateSuggestion);
       search.addEventListener("keydown", (e) => {
         if (e.key === "Enter") return handleEnter(e);
         if ((e.key === " ") & (e.target.value === ""))
           return e.preventDefault();
+        if (e.key === "Tab") return handleTab(e);
       });
 
       document.addEventListener("keydown", (e) => {
