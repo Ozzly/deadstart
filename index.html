@@ -89,7 +89,6 @@
 
         const split = raw.match(regex);
         if (!split) {
-          console.log("no split");
           overlayBody.textContent = raw;
           overlayCommandKey.textContent = "";
           overlayCommand.textContent = "";
@@ -117,8 +116,8 @@
         overlaySuggestion.textContent = suffix;
       }
 
-      function handleEnter(e) {
-        const query = e.target.value.trim();
+      function handleEnter() {
+        const query = search.value.trim();
         const split = query.match(regex);
         if (split) {
           const { commandChar, command, space, body } = split.groups;
@@ -155,7 +154,7 @@
 
       search.addEventListener("input", updateSuggestion);
       search.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") return handleEnter(e);
+        if (e.key === "Enter") return handleEnter();
         if ((e.key === " ") & (e.target.value === ""))
           return e.preventDefault();
         if (e.key === "Tab") return handleTab(e);
