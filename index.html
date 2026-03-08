@@ -20,16 +20,16 @@
     class="bg-base flex text-center justify-center h-full items-center text-text selection:bg-accent selection:text-base font-mono"
     id="body"
   >
-    <div class="relative w-140">
+    <div class="relative w-full">
       <input
         type="text"
         id="search"
-        class="relative z-10 w-full p-4 text-4xl leading-tight text-left bg-transparent focus:ring-0 focus:outline-none font-mono text-transparent caret-text selection:bg-accent/40 selection:text-transparent"
+        class="relative z-10 w-full p-4 text-4xl leading-tight text-center bg-transparent focus:ring-0 focus:outline-none font-mono text-transparent caret-text selection:bg-accent/40 selection:text-transparent"
         autofocus
       />
 
       <div
-        class="absolute inset-0 z-20 p-4 pointer-events-none font-mono text-4xl leading-tight text-left"
+        class="absolute inset-0 z-20 p-4 pointer-events-none font-mono text-4xl leading-tight text-center overflow-x-auto whitespace-nowrap"
         aria-hidden="true"
       >
         <span id="overlayCommandKey" class="text-text"></span
