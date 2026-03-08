@@ -71,15 +71,16 @@
 
         // Handle submission
         if (e.key === "Enter") {
-          if (commandPrefixes.includes(query[0])) {
-            const commandArray = query.slice(1).split(" ");
-            if (commandKeys.includes(commandArray[0])) {
-              window.location.href = `${commands[commandArray[0]]}${encodeURIComponent(commandArray[1])}`;
+          const split = query.match(regex);
+          if (split) {
+            const { commandChar, command, space, body } = split.groups;
+            if (commands[command]) {
+              window.location.href = `${commands[command]}${encodeURIComponent(body)}`;
             } else {
               console.log("invalid command");
             }
           } else {
-            window.location.href = `https://www.duckduckgo.com/?q=${encodeURIComponent(query)}`;
+            window.location.href = `https://www.duckduckgo.com/?q=${query}`;
           }
         }
       });
@@ -96,9 +97,7 @@
       function updateSuggestion() {
         const raw = search.value;
 
-        const split = raw.match(
-          /^(?<commandChar>[/:>])(?<command>[^\s]*)(?<space>\s?)(?<body>.*)$/,
-        );
+        const split = raw.match(regex);
         if (!split) {
           console.log("no split");
           overlayBody.textContent = raw;
