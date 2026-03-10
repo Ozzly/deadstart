@@ -117,6 +117,8 @@
     <script>
       const regex =
         /^(?<commandChar>[/:>])(?<command>[^\s]*)(?<space>\s?)(?<body>.*)$/;
+      const urlRegex =
+        /^(https?:\/\/)?(www\.)?(?<domain>[a-z0-9-]+(\.[a-z0-9-]+)+(\/\S*)?)$/i;
       const commands = {
         wiki: "https://en.wikipedia.org/wiki/Special:Search?search=",
         w: "https://en.wikipedia.org/wiki/Special:Search?search=",
@@ -195,17 +197,30 @@
 
       function handleEnter() {
         const query = search.value.trim();
+
+        // Check if query looks like a URL, if so go to the URL instead of searching
+        const urlMatch = query.match(urlRegex);
+        if (urlMatch) {
+          const { domain } = urlMatch.groups;
+          window.location.href = `https://${domain}`;
+          return;
+        }
+
+        // Check if query matches command pattern, if so go to the command URL
         const split = query.match(regex);
         if (split) {
           const { commandChar, command, space, body } = split.groups;
           if (commands[command]) {
             window.location.href = `${commands[command]}${encodeURIComponent(body)}`;
+            return;
           } else {
             console.log("invalid command");
+            return;
           }
-        } else {
-          window.location.href = `https://www.duckduckgo.com/?q=${query}`;
         }
+
+        // Default to duckduckgo search
+        window.location.href = `https://www.duckduckgo.com/?q=${query}`;
       }
 
       // Autocomplete command suggestions
