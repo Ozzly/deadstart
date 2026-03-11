@@ -163,7 +163,7 @@
 
       function updateSuggestion() {
         const raw = search.value;
-        const split = raw.match(regex);
+        let split = raw.match(regex);
 
         // Check if query matches forgetful regex
         if (!split) {
